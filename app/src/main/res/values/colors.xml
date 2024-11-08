@@ -2,7 +2,8 @@
 <resources>
     <color name="primary">#FF000000</color>
     <color name="secondary">#D5D5D5</color>
-    <color name="text_disable">#6B6B6B</color>
+    <color name="text_disable">#929292</color>
     <color name="edit_text_bg">#EBEBEB</color>
     <color name="button_bg">#121212</color>
+    <color name="text_disable_secondary">#DCDCDC</color>
 </resources>
