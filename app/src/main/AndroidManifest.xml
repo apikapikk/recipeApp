@@ -13,6 +13,24 @@
         android:theme="@style/Theme.RecipeApp"
         tools:targetApi="31">
         <activity
+            android:name=".VIewRecipesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ActionRecipesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListRecipesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LikedRecipesActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity

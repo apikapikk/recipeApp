@@ -16,11 +16,11 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        //initialize
+        //initialize element button, edittext, etc
         loginButton = findViewById(R.id.login_button_login)
 
 
-        //action
+        //action call homepage
         loginButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)

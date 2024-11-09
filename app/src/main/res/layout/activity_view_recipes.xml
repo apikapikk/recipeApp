@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActionRecipesActivity">
+
+    <FrameLayout
+        android:id="@+id/action_recipes_image_frame"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/action_image_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/test"
+            android:scaleType="centerCrop"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#80000000"/>
+
+        <TextView
+            android:id="@+id/view_recipes_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rujak Uenak Cik"
+            android:textSize="36sp"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/jakartasanssemibold"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="60dp"
+            android:layout_gravity="bottom" />
+
+        <TextView
+            android:id="@+id/view_recipes_type_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dessert"
+            android:textSize="26sp"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/jakartasansmedium"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/view_recipes_menu_frame"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toBottomOf="@id/action_recipes_image_frame"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/action_add_user_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/face_card_icon"
+            app:tint="@color/primary"
+            android:padding="20dp"/>
+
+        <TextView
+            android:id="@+id/action_add_user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elisia Safina"
+            android:textSize="18sp"
+            android:fontFamily="@font/jakartasanssemibold"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/action_add_recipes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="170dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/liked_recipes_icon"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/action_add_ingredients_recipes_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ingredients recipes"
+        android:textColor="@color/text_disable"
+        android:fontFamily="@font/jakartasansmedium"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/view_recipes_menu_frame"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/action_add_ingredients_recipes_text"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@drawable/edit_text_style"
+        android:padding="14dp"
+        android:fontFamily="@font/jakartasansmedium"
+        android:textColor="@color/primary"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        app:layout_constraintTop_toBottomOf="@id/action_add_ingredients_recipes_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/action_add_steps_recipes_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ingredients recipes"
+        android:textColor="@color/text_disable"
+        android:fontFamily="@font/jakartasansmedium"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/action_add_ingredients_recipes_text"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/action_add_steps_recipes_text"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@drawable/edit_text_style"
+        android:padding="14dp"
+        android:fontFamily="@font/jakartasansmedium"
+        android:textColor="@color/primary"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        app:layout_constraintTop_toBottomOf="@id/action_add_steps_recipes_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <LinearLayout
+        android:id="@+id/home_frame_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp">
+
+        <ImageButton
+            android:id="@+id/navigation_home_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:padding="10dp"
+            android:src="@drawable/navigation_home_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/navigation_list_recipes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:padding="10dp"
+            android:src="@drawable/navigation_list_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/navigation_liked_recipes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:padding="10dp"
+            android:src="@drawable/navigation_favorite_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/navigation_edit_recipes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:padding="10dp"
+            app:tint="@color/primary"
+            android:src="@drawable/navigation_edit_recipes_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/navigation_account_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:padding="10dp"
+            android:src="@drawable/navigation_account_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
