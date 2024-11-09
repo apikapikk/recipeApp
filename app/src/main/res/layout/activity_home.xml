@@ -110,65 +110,52 @@
     <LinearLayout
         android:id="@+id/home_frame_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="35dp"
-        android:paddingRight="35dp">
+        android:layout_marginLeft="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
-            android:id="@+id/navigation_home_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/home_navigation_home_button"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:padding="10dp"
             android:src="@drawable/navigation_home_icon"
             app:tint="@color/primary"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/navigation_list_recipes_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_navigation_list_recipes_button"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:padding="10dp"
             android:src="@drawable/navigation_list_icon"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/navigation_liked_recipes_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_navigation_liked_recipes_button"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:padding="10dp"
             android:src="@drawable/navigation_favorite_icon"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/navigation_edit_recipes_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_navigation_edit_recipes_button"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:padding="10dp"
             android:src="@drawable/navigation_edit_recipes_icon"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
-            android:id="@+id/navigation_account_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_navigation_account_button"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:padding="10dp"
             android:src="@drawable/navigation_account_icon"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
 

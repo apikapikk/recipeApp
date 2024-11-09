@@ -149,4 +149,57 @@
         app:layout_constraintTop_toBottomOf="@id/profile_name_text"
         tools:ignore="MissingConstraints" />
 
+    <LinearLayout
+        android:id="@+id/home_frame_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/profile_navigation_home_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/navigation_home_icon"
+            app:tint="@color/primary"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/profile_navigation_list_recipes_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/navigation_list_icon"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/profile_navigation_liked_recipes_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/navigation_favorite_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/profile_navigation_edit_recipes_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/navigation_edit_recipes_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/profile_navigation_account_button"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/navigation_account_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

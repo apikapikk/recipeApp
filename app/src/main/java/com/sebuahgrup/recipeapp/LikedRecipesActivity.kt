@@ -3,17 +3,18 @@ package com.sebuahgrup.recipeapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class LikedRecipesActivity : AppCompatActivity() {
-    private lateinit var homeButton : Button
-    private lateinit var listButton : Button
-    private lateinit var likedrecipesButton : Button
-    private lateinit var actionRecipesButton : Button
-    private lateinit var profileButton : Button
+    private lateinit var homeButton : ImageButton
+    private lateinit var listButton : ImageButton
+    private lateinit var likedRecipesButton : ImageButton
+    private lateinit var actionRecipesButton : ImageButton
+    private lateinit var profileButton : ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,11 +22,11 @@ class LikedRecipesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_liked_recipes)
 
         //initialize button
-        homeButton = findViewById(R.id.navigation_home_button)
-        listButton = findViewById(R.id.navigation_list_recipes_button)
-        likedrecipesButton = findViewById(R.id.navigation_liked_recipes_button)
-        actionRecipesButton = findViewById(R.id.navigation_edit_recipes_button)
-        profileButton = findViewById(R.id.navigation_account_button)
+        homeButton = findViewById(R.id.liked_navigation_home_button)
+        listButton = findViewById(R.id.liked_navigation_list_recipes_button)
+        likedRecipesButton = findViewById(R.id.liked_navigation_liked_recipes_button)
+        actionRecipesButton = findViewById(R.id.liked_navigation_edit_recipes_button)
+        profileButton = findViewById(R.id.liked_navigation_account_button)
 
         //action call Homepage
         homeButton.setOnClickListener {
@@ -38,7 +39,7 @@ class LikedRecipesActivity : AppCompatActivity() {
             startActivity(intent)
         }
         //action call LikedRecipesPage
-        likedrecipesButton.setOnClickListener {
+        likedRecipesButton.setOnClickListener {
             val intent = Intent(this, LikedRecipesActivity::class.java)
             startActivity(intent)
         }
