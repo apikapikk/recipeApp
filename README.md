@@ -29,4 +29,4 @@ Proyek ini dikerjakan oleh 4 orang anggota tim:
 
 1. Clone repository ini ke komputer Anda menggunakan perintah:
    ```bash
-   git clone https://github.com/username/repository-name.git
+   git clone https://github.com/apikapikk/recipeApp.git
