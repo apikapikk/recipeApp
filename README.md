@@ -1,7 +1,8 @@
 # Aplikasi Resep Android Sederhana
 
 Aplikasi Resep Android ini dikembangkan sebagai tugas pemrograman mobile. Aplikasi ini dibuat menggunakan Android Studio dengan bahasa pemrograman Kotlin dan desain UI XML. Untuk penyimpanan data, aplikasi ini menggunakan Firebase sebagai database.
-
+## Proses
+project ini masih belum selesai 
 ## Anggota Tim
 
 Proyek ini dikerjakan oleh 4 orang anggota tim:
