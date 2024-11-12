@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "137292144307",
+    "firebase_url": "https://recipes-apps-f7f8f-default-rtdb.firebaseio.com",
+    "project_id": "recipes-apps-f7f8f",
+    "storage_bucket": "recipes-apps-f7f8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137292144307:android:b348e1457bd18bc9fa9ac6",
+        "android_client_info": {
+          "package_name": "com.sebuahgrup.recipeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgFNcCm6ND4FrbVkHQnxtOGF8mbS-OMTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

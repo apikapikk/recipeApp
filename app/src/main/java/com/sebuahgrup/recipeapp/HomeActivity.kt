@@ -4,24 +4,30 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.sebuahgrup.recipeapp.model.User
 
 class HomeActivity : AppCompatActivity() {
 
-    //initialize button from xml files
+    //make variable to initialize element
     private lateinit var listButton : Button
     private lateinit var homeButton: ImageButton
     private lateinit var likedButton : ImageButton
     private lateinit var listButtonNav : ImageButton
-    private lateinit var actionButton: ImageButton
-    private lateinit var profileButton: ImageButton
+    private lateinit var actionButton : ImageButton
+    private lateinit var profileButton : ImageButton
+    private lateinit var userGreetings : TextView
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
-
         //initialize element
         listButton = findViewById(R.id.home_see_all_recipes_button)
         homeButton = findViewById(R.id.home_navigation_home_button)
@@ -29,7 +35,8 @@ class HomeActivity : AppCompatActivity() {
         listButtonNav = findViewById(R.id.profile_navigation_list_recipes_button)
         actionButton = findViewById(R.id.profile_navigation_edit_recipes_button)
         profileButton = findViewById(R.id.profile_navigation_account_button)
-
+        userGreetings = findViewById(R.id.home_greetings_user_label)
+        auth = FirebaseAuth.getInstance()
         //action call page
         homeButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -55,5 +62,31 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
+        //call function to display current user name in user greetings label
+        displayUser()
     }
-}
+    //function to display current user name in user greetings label
+    private fun displayUser() {
+        val uid = auth.currentUser?.uid
+        if (uid != null){
+            getUserName(uid)
+        }else{
+            Toast.makeText(this, "User Belum Login", Toast.LENGTH_SHORT).show()
+        }
+    }
+    //function to get current user login name
+    private fun getUserName(uid: String) {
+       val db = FirebaseDatabase.getInstance().getReference("users")
+        db.child(uid).get().addOnSuccessListener { userGetName ->
+            val name = userGetName.getValue(User::class.java)
+            val tempUser = name?.name.toString()
+            if (name != null){
+                userGreetings.text = tempUser
+            }else{
+                Toast.makeText(this, "Unknown", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    }
