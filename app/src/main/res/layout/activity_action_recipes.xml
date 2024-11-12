@@ -207,7 +207,6 @@
             android:layout_height="match_parent"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_home_icon"
-            app:tint="@color/primary"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
@@ -232,6 +231,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_edit_recipes_icon"
+            app:tint="@color/primary"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton

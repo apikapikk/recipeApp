@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, ListRecipesActivity::class.java)
+                    val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                 }else{
                     Toast.makeText(this, "Login Gagal : ${task.exception?.message}", Toast.LENGTH_SHORT).show()

@@ -70,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
         val uid = auth.currentUser?.uid
         if (uid != null){
             getUserName(uid)
-        }else{
+         }else{
             Toast.makeText(this, "User Belum Login", Toast.LENGTH_SHORT).show()
         }
     }
@@ -84,8 +84,8 @@ class HomeActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
     }
