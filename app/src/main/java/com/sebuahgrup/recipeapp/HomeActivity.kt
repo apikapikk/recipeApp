@@ -77,13 +77,12 @@ class HomeActivity : AppCompatActivity() {
     //function to get current user login name
     private fun getUserName(uid: String) {
        val db = FirebaseDatabase.getInstance().getReference("users")
-        db.child(uid).get().addOnSuccessListener { userGetName ->
-            val name = userGetName.getValue(User::class.java)
-            val tempUser = name?.name.toString()
-            if (name != null){
-                userGreetings.text = tempUser
-            }else{
-                Toast.makeText(this, "Unknown", Toast.LENGTH_SHORT).show()
+        db.child(uid).get().addOnSuccessListener { snapshot ->
+            val user = snapshot.getValue(User::class.java)
+            if (user != null) {
+                userGreetings.text = user.name
+            } else {
+                Toast.makeText(this, "Data pengguna tidak ditemukan", Toast.LENGTH_SHORT).show()
             }
         }.addOnFailureListener {
             Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
