@@ -1,7 +1,8 @@
 # Aplikasi Resep Android Sederhana
 
 Aplikasi Resep Android ini dikembangkan sebagai tugas pemrograman mobile. Aplikasi ini dibuat menggunakan Android Studio dengan bahasa pemrograman Kotlin dan desain UI XML. Untuk penyimpanan data, aplikasi ini menggunakan Firebase sebagai database.
-
+## Proses
+project ini masih belum selesai 
 ## Anggota Tim
 
 Proyek ini dikerjakan oleh 4 orang anggota tim:
@@ -29,4 +30,4 @@ Proyek ini dikerjakan oleh 4 orang anggota tim:
 
 1. Clone repository ini ke komputer Anda menggunakan perintah:
    ```bash
-   git clone https://github.com/username/repository-name.git
+   git clone https://github.com/apikapikk/recipeApp.git
