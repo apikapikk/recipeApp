@@ -1,5 +1,6 @@
 package com.sebuahgrup.recipeapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -8,8 +9,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sebuahgrup.recipeapp.adapter.RecipesAdapter
+import com.sebuahgrup.recipeapp.model.Recipes
 import com.sebuahgrup.recipeapp.model.User
 
 class HomeActivity : AppCompatActivity() {
@@ -22,7 +28,10 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var actionButton : ImageButton
     private lateinit var profileButton : ImageButton
     private lateinit var userGreetings : TextView
+    private lateinit var recyclerView: RecyclerView
     private lateinit var auth : FirebaseAuth
+    private lateinit var recipesList: MutableList<Recipes>
+    private lateinit var recipesAdapter: RecipesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +45,13 @@ class HomeActivity : AppCompatActivity() {
         actionButton = findViewById(R.id.profile_navigation_edit_recipes_button)
         profileButton = findViewById(R.id.profile_navigation_account_button)
         userGreetings = findViewById(R.id.home_greetings_user_label)
+        recipesList = mutableListOf()
+        recipesAdapter = RecipesAdapter(recipesList)
+        recyclerView = findViewById(R.id.home_recycle_view_recipes)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = recipesAdapter
         auth = FirebaseAuth.getInstance()
+
         //action call page
         homeButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -64,7 +79,28 @@ class HomeActivity : AppCompatActivity() {
         }
         //call function to display current user name in user greetings label
         displayUser()
+        getRecipesFromFirestore()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getRecipesFromFirestore() {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("recipes")
+            .get()
+            .addOnSuccessListener { result ->
+                recipesList.clear() // Clear list before adding new data
+                for (document in result) {
+                    val recipe = document.toObject(Recipes::class.java)
+                    recipesList.add(recipe)
+                }
+                recipesAdapter.notifyDataSetChanged() // Update RecyclerView
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error getting documents: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     //function to display current user name in user greetings label
     private fun displayUser() {
         val uid = auth.currentUser?.uid

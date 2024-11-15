@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <!--  Background Image  -->
         <ImageView
-            android:id="@+id/recipe_image_card"
+            android:id="@+id/home_recipes_image_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -26,7 +26,7 @@
         <!--  Adjust alpha for transparency  -->
         <!--  TextView partially overlaying the image  -->
         <TextView
-            android:id="@+id/recipe_name_card"
+            android:id="@+id/home_recipes_name_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -37,7 +37,7 @@
             android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/recipes_creator_name"
+            android:id="@+id/home_recipes_creator_name"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

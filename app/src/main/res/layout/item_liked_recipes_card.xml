@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
         <!--  Background Image  -->
         <ImageView
-            android:id="@+id/recipe_image_card"
+            android:id="@+id/recipes_image_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
