@@ -58,7 +58,7 @@
             android:padding="20dp"/>
 
         <TextView
-            android:id="@+id/action_add_user_text"
+            android:id="@+id/action_add_user_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Elisia Safina"
@@ -167,7 +167,7 @@
         android:id="@+id/action_add_steps_recipes_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ingredients recipes"
+        android:text="step recipes"
         android:textColor="@color/text_disable"
         android:fontFamily="@font/jakartasansmedium"
         android:layout_marginLeft="18dp"
