@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sebuahgrup.recipeapp.adapter.RecipesAdapter
+import com.sebuahgrup.recipeapp.adapter.HomeRecipesAdapter
 import com.sebuahgrup.recipeapp.model.Recipes
 import com.sebuahgrup.recipeapp.model.User
 
@@ -31,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var auth : FirebaseAuth
     private lateinit var recipesList: MutableList<Recipes>
-    private lateinit var recipesAdapter: RecipesAdapter
+    private lateinit var homeRecipesAdapter: HomeRecipesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +46,16 @@ class HomeActivity : AppCompatActivity() {
         profileButton = findViewById(R.id.profile_navigation_account_button)
         userGreetings = findViewById(R.id.home_greetings_user_label)
         recipesList = mutableListOf()
-        recipesAdapter = RecipesAdapter(recipesList)
+        homeRecipesAdapter = HomeRecipesAdapter(recipesList) { recipe ->
+            // Handle item click
+            val intent = Intent(this, VIewRecipesActivity::class.java)
+            intent.putExtra("recipe_id", recipe.id)  // Pass recipe ID
+            startActivity(intent)
+        }
         recyclerView = findViewById(R.id.home_recycle_view_recipes)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.adapter = recipesAdapter
         auth = FirebaseAuth.getInstance()
+        recyclerView.adapter = homeRecipesAdapter
 
         //action call page
         homeButton.setOnClickListener {
@@ -82,6 +87,7 @@ class HomeActivity : AppCompatActivity() {
         getRecipesFromFirestore()
     }
 
+   // @essLint("NotifyDataSetChanged")Suppr
     @SuppressLint("NotifyDataSetChanged")
     private fun getRecipesFromFirestore() {
         val db = FirebaseFirestore.getInstance()
@@ -94,7 +100,7 @@ class HomeActivity : AppCompatActivity() {
                     val recipe = document.toObject(Recipes::class.java)
                     recipesList.add(recipe)
                 }
-                recipesAdapter.notifyDataSetChanged() // Update RecyclerView
+                homeRecipesAdapter.notifyDataSetChanged() // Update RecyclerView
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting documents: ${exception.message}", Toast.LENGTH_SHORT).show()

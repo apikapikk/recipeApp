@@ -7,5 +7,6 @@ data class Recipes (
     val typeRecipes : String = "",
     val ingredientsRecipes : String = "",
     val stepRecipes : String = "",
-    val imageRecipes : String = ""
+    val imageRecipes : String = "",
+    val likedBy: List<String> = emptyList()
 )

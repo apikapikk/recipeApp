@@ -11,18 +11,26 @@ import com.sebuahgrup.recipeapp.R
 import android.graphics.Bitmap
 import android.util.Base64
 import android.graphics.BitmapFactory
+import android.widget.ImageButton
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.sebuahgrup.recipeapp.model.Recipes
 
-class RecipesAdapter(private val recipesList: List<Recipes>) : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
+class ListRecipesAdapter(
+    private val recipesList: List<Recipes>,
+    private val onItemClick: (Recipes) -> Unit,
+    private val onLikeClick: (Recipes) -> Unit
+) : RecyclerView.Adapter<ListRecipesAdapter.RecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_home_recipes_card, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list_recipes_card, parent, false)
         return RecipeViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val recipe = recipesList[position]
         holder.recipesName.text = recipe.recipesName
+        holder.recipesType.text = recipe.typeRecipes
         holder.authorRecipes.text = recipe.creatorName
         // Decode the Base64 string and get Bitmap
         val imageBitmap = decodeBase64ToBitmap(recipe.imageRecipes)
@@ -30,6 +38,18 @@ class RecipesAdapter(private val recipesList: List<Recipes>) : RecyclerView.Adap
         Glide.with(holder.itemView.context)
             .load(imageBitmap)  // Glide can accept Bitmap
             .into(holder.recipeImage)  // Set the image into ImageView
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserUid != null && recipe.likedBy.contains(currentUserUid)) {
+            holder.likeButton.setImageResource(R.drawable.liked_recipes_on) // Use your "liked" icon
+        } else {
+            holder.likeButton.setImageResource(R.drawable.liked_recipes_off) // Use your "not liked" icon
+        }
+        holder.itemView.setOnClickListener {
+            onItemClick(recipe)  // Pass the clicked recipe to the listener
+        }
+        holder.likeButton.setOnClickListener {
+            onLikeClick(recipe)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -42,8 +62,10 @@ class RecipesAdapter(private val recipesList: List<Recipes>) : RecyclerView.Adap
     }
 
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val recipesName: TextView = itemView.findViewById(R.id.home_recipes_name_card)
-        val authorRecipes: TextView = itemView.findViewById(R.id.home_recipes_creator_name)
-        val recipeImage: ImageView = itemView.findViewById(R.id.home_recipes_image_card)
+        val likeButton : ImageButton = itemView.findViewById(R.id.list_liked_button_card)
+        val recipesName: TextView = itemView.findViewById(R.id.list_recipe_name_card)
+        val recipesType : TextView = itemView.findViewById(R.id.list_recipe_type_card)
+        val authorRecipes: TextView = itemView.findViewById(R.id.list_recipes_creator_name)
+        val recipeImage: ImageView = itemView.findViewById(R.id.list_recipes_image_card)
     }
 }

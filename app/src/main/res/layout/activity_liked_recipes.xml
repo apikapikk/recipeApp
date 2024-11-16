@@ -72,7 +72,7 @@
         app:layout_constraintBottom_toTopOf="@id/liked_recipes_frame_navigation"
         android:orientation="horizontal"
         android:padding="20dp"
-        tools:listitem="@layout/item_liked_recipes_card"/>
+        tools:listitem="@layout/item_list_recipes_card"/>
 
     <LinearLayout
         android:id="@+id/liked_recipes_frame_navigation"

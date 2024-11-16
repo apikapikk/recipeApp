@@ -14,7 +14,7 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:id="@+id/action_image_preview"
+            android:id="@+id/view_recipes_image_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/test"
@@ -67,7 +67,7 @@
             android:padding="20dp"/>
 
         <TextView
-            android:id="@+id/action_add_user_text"
+            android:id="@+id/view_recipes_user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Elisia Safina"
@@ -100,7 +100,7 @@
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
-        android:id="@+id/action_add_ingredients_recipes_text"
+        android:id="@+id/view_recipes_ingredients_recipes_text"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@drawable/edit_text_style"
@@ -123,11 +123,11 @@
         android:fontFamily="@font/jakartasansmedium"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/action_add_ingredients_recipes_text"
+        app:layout_constraintTop_toBottomOf="@id/view_recipes_ingredients_recipes_text"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
-        android:id="@+id/action_add_steps_recipes_text"
+        android:id="@+id/view_recipes_steps_recipes_text"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@drawable/edit_text_style"

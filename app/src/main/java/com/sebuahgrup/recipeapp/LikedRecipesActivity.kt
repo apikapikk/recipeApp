@@ -1,5 +1,6 @@
 package com.sebuahgrup.recipeapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
@@ -7,8 +8,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sebuahgrup.recipeapp.adapter.ListRecipesAdapter
+import com.sebuahgrup.recipeapp.model.Recipes
 import com.sebuahgrup.recipeapp.model.User
 
 class LikedRecipesActivity : AppCompatActivity() {
@@ -18,7 +25,11 @@ class LikedRecipesActivity : AppCompatActivity() {
     private lateinit var actionRecipesButton : ImageButton
     private lateinit var profileButton : ImageButton
     private lateinit var userGreetings : TextView
-    private lateinit var auth : FirebaseAuth
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var likedRecipesAdapter: ListRecipesAdapter
+    private lateinit var auth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
+    private val likedRecipesList: MutableList<Recipes> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +43,28 @@ class LikedRecipesActivity : AppCompatActivity() {
         actionRecipesButton = findViewById(R.id.liked_navigation_edit_recipes_button)
         profileButton = findViewById(R.id.liked_navigation_account_button)
         userGreetings = findViewById(R.id.liked_recipes_greetings_user_label)
+        recyclerView = findViewById(R.id.liked_recycle_view_recipes)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
+        // Initialize Adapter
+        likedRecipesAdapter = ListRecipesAdapter(
+            likedRecipesList,
+            onItemClick = { recipe ->
+                // Handle item click
+                val intent = Intent(this, VIewRecipesActivity::class.java)
+                intent.putExtra("recipe_id", recipe.id)
+                startActivity(intent)
+            },
+            onLikeClick = { recipe ->
+                handleLikeClick(recipe)
+            }
+        )
+        recyclerView.adapter = likedRecipesAdapter
+        recyclerView = findViewById(R.id.liked_recycle_view_recipes)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         auth = FirebaseAuth.getInstance()
 
         //action call Homepage
@@ -61,6 +94,26 @@ class LikedRecipesActivity : AppCompatActivity() {
         }
 
         displayUser()
+        loadLikedRecipes()
+    }
+    private fun handleLikeClick(recipe: Recipes) {
+        val currentUserUid = auth.currentUser?.uid
+        if (currentUserUid != null) {
+            val recipeRef = db.collection("recipes").document(recipe.id)
+            if (recipe.likedBy.contains(currentUserUid)) {
+                // Remove UID from likedBy
+                recipeRef.update("likedBy", FieldValue.arrayRemove(currentUserUid))
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Unliked", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                // Add UID to likedBy
+                recipeRef.update("likedBy", FieldValue.arrayUnion(currentUserUid))
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Liked", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }
     }
     //function to display current user name in user greetings label
     private fun displayUser() {
@@ -85,5 +138,27 @@ class LikedRecipesActivity : AppCompatActivity() {
             Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
         }
     }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun loadLikedRecipes() {
+        val currentUserUid = auth.currentUser?.uid
+        if (currentUserUid == null) {
+            Toast.makeText(this, "User belum login", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        db.collection("recipes")
+            .whereArrayContains("likedBy", currentUserUid)
+            .get()
+            .addOnSuccessListener { result ->
+                likedRecipesList.clear()
+                for (document in result) {
+                    val recipe = document.toObject(Recipes::class.java)
+                    likedRecipesList.add(recipe)
+                }
+                likedRecipesAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
 }
