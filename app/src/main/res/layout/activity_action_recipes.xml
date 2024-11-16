@@ -244,5 +244,40 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/action_loading_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#80000000"/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ProgressBar
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_style_rounded"
+                android:backgroundTint="@android:color/white"
+                android:indeterminate="true"
+                tools:ignore="MissingConstraints"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proses Upload"
+                android:fontFamily="@font/jakartasansmedium"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,6 +31,8 @@ class ListRecipesActivity : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var recipesList: MutableList<Recipes>
     private lateinit var listRecipesAdapter: ListRecipesAdapter
+    private var isBackToHome = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,8 +103,19 @@ class ListRecipesActivity : AppCompatActivity() {
             startActivity(intent)
         }
         getRecipesFromFirestore()
+        onBackPressedDispatcher.addCallback(this) {
+            handlePress()
+        }
     }
-
+    private fun handlePress() {
+        if (isBackToHome) {
+            finishAffinity()
+        } else {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            isBackToHome = true
+        }
+    }
     @SuppressLint("NotifyDataSetChanged")
     private fun getRecipesFromFirestore() {
         val db = FirebaseFirestore.getInstance()

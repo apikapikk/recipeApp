@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Base64
 import android.graphics.BitmapFactory
+import androidx.activity.addCallback
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sebuahgrup.recipeapp.model.Recipes
 
@@ -25,6 +26,7 @@ class VIewRecipesActivity : AppCompatActivity() {
     private lateinit var ingredientsRecipes : TextView
     private lateinit var stepsRecipes : TextView
     private lateinit var imageRecipes : ImageView
+    private var isBackToHome = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,6 @@ class VIewRecipesActivity : AppCompatActivity() {
         imageRecipes = findViewById(R.id.view_recipes_image_preview)
 
         val recipeId = intent.getStringExtra("recipe_id")
-
         if (recipeId != null){
             getRecipeDetails(recipeId)
         }
@@ -75,8 +76,19 @@ class VIewRecipesActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
+        onBackPressedDispatcher.addCallback(this) {
+            handlePress()
+        }
     }
-
+    private fun handlePress() {
+        if (isBackToHome) {
+            finishAffinity()
+        } else {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            isBackToHome = true
+        }
+    }
     private fun getRecipeDetails(recipeId: String) {
         val db = FirebaseFirestore.getInstance()
 

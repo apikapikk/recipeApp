@@ -18,10 +18,15 @@ import android.provider.MediaStore
 import com.sebuahgrup.recipeapp.model.Recipes
 import androidx.activity.result.contract.ActivityResultContracts
 import android.graphics.ImageDecoder
+import android.net.Uri
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ProgressBar
+import androidx.activity.addCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sebuahgrup.recipeapp.model.User
@@ -43,16 +48,19 @@ class ActionRecipesActivity : AppCompatActivity() {
     private lateinit var uploadImageButton: Button
     private lateinit var userNameLog: TextView
     private lateinit var previewImageView: ImageView
+    private lateinit var loadingProgressBar: FrameLayout
     private var imageBase64: String = ""
     private var getUserNameLog: String = ""
     private lateinit var auth : FirebaseAuth
+    private var isBackToHome = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_action_recipes)
-
         //initialize button
+        loadingProgressBar = findViewById(R.id.action_loading_progress_bar)
         homeButton = findViewById(R.id.action_navigation_home_button)
         listButton = findViewById(R.id.action_navigation_list_recipes_button)
         likedRecipesButton = findViewById(R.id.action_navigation_liked_recipes_button)
@@ -74,6 +82,9 @@ class ActionRecipesActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         typeRecipesSpinner.adapter = adapter
 
+        onBackPressedDispatcher.addCallback(this) {
+           handlePress()
+        }
         //action call Homepage
         homeButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -109,6 +120,17 @@ class ActionRecipesActivity : AppCompatActivity() {
         }
         displayUser()
     }
+
+    private fun handlePress() {
+            if (isBackToHome) {
+                finishAffinity()
+            } else {
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                isBackToHome = true
+            }
+    }
+
     private fun displayUser() {
         val uid = auth.currentUser?.uid
         if (uid != null){
@@ -137,7 +159,16 @@ class ActionRecipesActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         getImage.launch(intent)
     }
+    private fun compressBitmap(bitmap: Bitmap): Bitmap {
+        val maxWidth = 1024  // Tentukan lebar maksimal gambar
+        val maxHeight = 1024 // Tentukan tinggi maksimal gambar
 
+        val ratio: Float = Math.min(maxWidth.toFloat() / bitmap.width, maxHeight.toFloat() / bitmap.height)
+        val width = (bitmap.width * ratio).toInt()
+        val height = (bitmap.height * ratio).toInt()
+
+        return Bitmap.createScaledBitmap(bitmap, width, height, true)
+    }
     private val getImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val imageUri = result.data?.data
@@ -147,18 +178,42 @@ class ActionRecipesActivity : AppCompatActivity() {
                 } else {
                     MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 }
-                previewImageView.setImageBitmap(bitmap)
-                imageBase64 = bitmapToBase64(bitmap)  // Store the Base64 string
+                val format = getImageFormat(imageUri)  // Mendapatkan format gambar
+                if (checkImageSize(bitmap)) {
+                    val compressedBitmap = compressBitmap(bitmap)
+                    previewImageView.setImageBitmap(compressedBitmap)
+                    imageBase64 = bitmapToBase64(compressedBitmap, format)  // Mengirimkan format yang benar
+                } else {
+                    Toast.makeText(this, "Ukuran gambar terlalu besar, silakan pilih gambar yang lebih kecil", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
-    private fun bitmapToBase64(bitmap: Bitmap): String {
+    private fun getImageFormat(uri: Uri): Bitmap.CompressFormat {
+        val mimeType = contentResolver.getType(uri)
+        return when {
+            mimeType?.contains("jpeg") == true || mimeType?.contains("jpg") == true -> Bitmap.CompressFormat.JPEG
+            mimeType?.contains("png") == true -> Bitmap.CompressFormat.PNG
+            mimeType?.contains("webp") == true -> Bitmap.CompressFormat.WEBP
+            else -> Bitmap.CompressFormat.JPEG  // Default ke JPEG jika format tidak dikenal
+        }
+    }
+    private fun checkImageSize(bitmap: Bitmap): Boolean {
+        val maxSize = 1024 * 1024  // Maksimal ukuran gambar 1MB
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+
+        return byteArray.size <= maxSize
+    }
+    private fun bitmapToBase64(bitmap: Bitmap, format: Bitmap.CompressFormat): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(format, 80, byteArrayOutputStream)  // Menggunakan format yang diteruskan
         val byteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
     private fun addRecipesToDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
         val db = Firebase.firestore
         val newRecipe = Recipes(
             id = db.collection("recipes").document().id,
@@ -172,12 +227,21 @@ class ActionRecipesActivity : AppCompatActivity() {
 
         db.collection("recipes").document(newRecipe.id).set(newRecipe)
             .addOnSuccessListener {
+                loadingProgressBar.visibility = View.GONE
+                clearForm()
                 Toast.makeText(this, "Tambah Resep Berhasil", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
+                loadingProgressBar.visibility = View.GONE
                 Toast.makeText(this, "gagal Menambah resep", Toast.LENGTH_SHORT).show()
             }
 
+    }
+
+    private fun clearForm() {
+        nameRecipesText.text.clear()
+        ingredientsRecipesText.text.clear()
+        stepRecipesText.text.clear()
     }
 
 }

@@ -46,7 +46,11 @@ class MainActivity : AppCompatActivity() {
 
     //function to login user
     private fun loginActionFunction(usernameText: String, passwordText: String) {
-        auth.signInWithEmailAndPassword(usernameText, passwordText)
+        if (usernameText.isEmpty() || passwordText.isEmpty()) {
+            Toast.makeText(this, "Email atau Password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+            return
+        }
+            auth.signInWithEmailAndPassword(usernameText, passwordText)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     // Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show() Disable Toast

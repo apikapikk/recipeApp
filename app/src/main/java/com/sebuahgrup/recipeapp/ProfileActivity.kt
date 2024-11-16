@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var usernameProfile : EditText
     private lateinit var passwordProfile : EditText
     private lateinit var auth : FirebaseAuth
+    private var isBackToHome = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +70,18 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
         displayUser()
+        onBackPressedDispatcher.addCallback(this) {
+            handlePress()
+        }
+    }
+    private fun handlePress() {
+        if (isBackToHome) {
+            finishAffinity()
+        } else {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            isBackToHome = true
+        }
     }
     //function to display current user name in user greetings label
     private fun displayUser() {

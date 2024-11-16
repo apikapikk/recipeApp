@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ class LikedRecipesActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
     private val likedRecipesList: MutableList<Recipes> = mutableListOf()
+    private var isBackToHome = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,9 +94,20 @@ class LikedRecipesActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-
         displayUser()
         loadLikedRecipes()
+        onBackPressedDispatcher.addCallback(this) {
+            handlePress()
+        }
+    }
+    private fun handlePress() {
+        if (isBackToHome) {
+            finishAffinity()
+        } else {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            isBackToHome = true
+        }
     }
     private fun handleLikeClick(recipe: Recipes) {
         val currentUserUid = auth.currentUser?.uid

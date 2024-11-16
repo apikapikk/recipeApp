@@ -30,11 +30,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:padding="18dp"
+            android:padding="8dp"
             android:text="Brownies"
-            android:fontFamily="@font/jakartasansmedium"
+            android:fontFamily="@font/jakartasanssemibold"
             android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:textSize="50sp"/>
 
         <TextView
             android:id="@+id/home_recipes_creator_name"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="Bunda Rahma"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textColor="@android:color/white"
             android:fontFamily="@font/jakartasansmedium"
             android:padding="20dp"/>
