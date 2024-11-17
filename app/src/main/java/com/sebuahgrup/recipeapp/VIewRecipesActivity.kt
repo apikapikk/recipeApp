@@ -62,9 +62,9 @@ class VIewRecipesActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-
         val recipeId = intent.getStringExtra("recipe_id")
         val authorUid = intent.getStringExtra("author_uid")
+
         if (recipeId != null){
             getRecipeDetails(recipeId)
         }
@@ -105,6 +105,12 @@ class VIewRecipesActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this, "gagal", Toast.LENGTH_SHORT).show()
             }
+        }
+        editRecipesButton.setOnClickListener {
+            val intent = Intent(this, ActionRecipesActivity::class.java)
+            intent.putExtra("isUpdate", true)
+            intent.putExtra("recipeId", recipeId)
+            startActivity(intent)
         }
         onBackPressedDispatcher.addCallback(this) {
             handlePress()

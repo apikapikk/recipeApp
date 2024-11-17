@@ -2,6 +2,7 @@ package com.sebuahgrup.recipeapp
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -52,7 +53,8 @@ class ActionRecipesActivity : AppCompatActivity() {
     private var getUserNameLog: String = ""
     private lateinit var auth : FirebaseAuth
     private var isBackToHome = false
-
+    private var isUpdateMode: Boolean = false
+    private var recipeIdToUpdate: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,8 @@ class ActionRecipesActivity : AppCompatActivity() {
         userNameLog = findViewById(R.id.action_add_user_label)
         previewImageView = findViewById(R.id.action_image_preview)
         auth = FirebaseAuth.getInstance()
+        isUpdateMode = intent.getBooleanExtra("isUpdate", false)
+        recipeIdToUpdate = intent.getStringExtra("recipeId")
 
         //spinner data type
         val recipeTypes = arrayOf("minuman", "makanan Ringan", "makanan Berat", "pembuka","Penutup")
@@ -83,6 +87,11 @@ class ActionRecipesActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this) {
            handlePress()
+        }
+        if (isUpdateMode) {
+            setupUpdateMode()
+        } else {
+            addRecipesButton.text = "Add Recipes"
         }
         //action call Homepage
         homeButton.setOnClickListener {
@@ -115,9 +124,71 @@ class ActionRecipesActivity : AppCompatActivity() {
         }
         //action to add recipes
         addRecipesButton.setOnClickListener {
-            addRecipesToDatabase()
+            if (isUpdateMode) {
+                updateRecipeInDatabase()
+            } else {
+                addRecipesToDatabase()
+            }
         }
         displayUser()
+    }
+
+    private fun updateRecipeInDatabase() {
+        loadingProgressBar.visibility = View.VISIBLE
+        val db = Firebase.firestore
+
+        val updatedRecipe = mapOf(
+            "recipesName" to nameRecipesText.text.toString(),
+            "typeRecipes" to typeRecipesSpinner.selectedItem.toString(),
+            "ingredientsRecipes" to ingredientsRecipesText.text.toString(),
+            "stepRecipes" to stepRecipesText.text.toString(),
+            "imageRecipes" to imageBase64
+        )
+
+        recipeIdToUpdate?.let { id ->
+            db.collection("recipes").document(id).update(updatedRecipe)
+                .addOnSuccessListener {
+                    loadingProgressBar.visibility = View.GONE
+                    Toast.makeText(this, "Update Resep Berhasil", Toast.LENGTH_SHORT).show()
+                    finish() // Kembali ke halaman sebelumnya
+                }
+                .addOnFailureListener {
+                    loadingProgressBar.visibility = View.GONE
+                    Toast.makeText(this, "Gagal Mengupdate Resep", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun setupUpdateMode() {
+        addRecipesButton.text = "Update Recipes"
+
+        // Ambil data resep dari Firestore dan isi form
+        val db = Firebase.firestore
+        recipeIdToUpdate?.let { id ->
+            db.collection("recipes").document(id).get()
+                .addOnSuccessListener { document ->
+                    val recipe = document.toObject(Recipes::class.java)
+                    if (recipe != null) {
+
+                        nameRecipesText.setText(recipe.recipesName)
+                        ingredientsRecipesText.setText(recipe.ingredientsRecipes)
+                        stepRecipesText.setText(recipe.stepRecipes)
+                        val typePosition = (typeRecipesSpinner.adapter as ArrayAdapter<String>)
+                            .getPosition(recipe.typeRecipes)
+                        typeRecipesSpinner.setSelection(typePosition)
+
+                        if (recipe.imageRecipes.isNotEmpty()) {
+                            val decodedImage = Base64.decode(recipe.imageRecipes, Base64.DEFAULT)
+                            val bitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.size)
+                            previewImageView.setImageBitmap(bitmap)
+                            imageBase64 = recipe.imageRecipes
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Gagal memuat data resep", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun handlePress() {
