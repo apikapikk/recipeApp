@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.sebuahgrup.recipeapp.model.User
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.login_button_login)
         registerButton = findViewById(R.id.login_button_register)
         auth = FirebaseAuth.getInstance()
-
         //action call homepage
         loginButton.setOnClickListener {
             //get text from edittext

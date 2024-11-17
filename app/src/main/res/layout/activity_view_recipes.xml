@@ -76,13 +76,25 @@
             android:layout_gravity="center_vertical" />
 
         <ImageButton
-            android:id="@+id/action_add_recipes_button"
+            android:id="@+id/view_delete_recipes_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="170dp"
+            android:visibility="gone"
+            android:layout_marginLeft="120dp"
             android:background="@drawable/button_style_whithout_backgorund"
-            android:src="@drawable/liked_recipes_icon"
+            android:src="@drawable/delete_recipes_icon"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/view_edit_recipes_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/button_style_whithout_backgorund"
+            android:src="@drawable/edit_recipes_icon"
             tools:ignore="TextSizeCheck,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     </LinearLayout>
@@ -192,6 +204,41 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/action_loading_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#80000000"/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ProgressBar
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_style_rounded"
+                android:backgroundTint="@android:color/white"
+                android:indeterminate="true"
+                tools:ignore="MissingConstraints"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proses Upload"
+                android:fontFamily="@font/jakartasansmedium"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+    </FrameLayout>
 
 
 

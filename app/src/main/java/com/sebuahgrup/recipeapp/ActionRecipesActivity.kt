@@ -1,35 +1,34 @@
 package com.sebuahgrup.recipeapp
 
 import android.content.Intent
-import android.os.Bundle
-import android.os.Build
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Spinner
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import android.graphics.Bitmap
-import android.util.Base64
-import java.io.ByteArrayOutputStream
-import android.provider.MediaStore
-import com.sebuahgrup.recipeapp.model.Recipes
-import androidx.activity.result.contract.ActivityResultContracts
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
-import android.widget.ProgressBar
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.firestore
+import com.sebuahgrup.recipeapp.model.Recipes
 import com.sebuahgrup.recipeapp.model.User
+import java.io.ByteArrayOutputStream
 
 
 class ActionRecipesActivity : AppCompatActivity() {
@@ -201,14 +200,14 @@ class ActionRecipesActivity : AppCompatActivity() {
     private fun checkImageSize(bitmap: Bitmap): Boolean {
         val maxSize = 1024 * 1024  // Maksimal ukuran gambar 1MB
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
 
         return byteArray.size <= maxSize
     }
     private fun bitmapToBase64(bitmap: Bitmap, format: Bitmap.CompressFormat): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(format, 80, byteArrayOutputStream)  // Menggunakan format yang diteruskan
+        bitmap.compress(format, 60, byteArrayOutputStream)  // Menggunakan format yang diteruskan
         val byteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
@@ -218,6 +217,7 @@ class ActionRecipesActivity : AppCompatActivity() {
         val newRecipe = Recipes(
             id = db.collection("recipes").document().id,
             creatorName = getUserNameLog,
+            creatorUid = auth.currentUser?.uid.toString(),
             recipesName = nameRecipesText.text.toString(),
             typeRecipes = typeRecipesSpinner.selectedItem.toString(),
             ingredientsRecipes = ingredientsRecipesText.text.toString(),

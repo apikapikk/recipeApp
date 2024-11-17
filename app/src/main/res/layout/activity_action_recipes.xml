@@ -277,7 +277,6 @@
                 android:textColor="@android:color/white"
                 android:gravity="center"/>
         </LinearLayout>
-
         </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

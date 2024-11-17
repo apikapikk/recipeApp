@@ -10,9 +10,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Base64
 import android.graphics.BitmapFactory
+import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.addCallback
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sebuahgrup.recipeapp.model.Recipes
+
 
 class VIewRecipesActivity : AppCompatActivity() {
     private lateinit var homeButton : ImageButton
@@ -26,6 +30,12 @@ class VIewRecipesActivity : AppCompatActivity() {
     private lateinit var ingredientsRecipes : TextView
     private lateinit var stepsRecipes : TextView
     private lateinit var imageRecipes : ImageView
+    private lateinit var deleteRecipesButton: ImageButton
+    private lateinit var editRecipesButton: ImageButton
+    private lateinit var loadingProgressBar : FrameLayout
+    private lateinit var auth : FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var label : TextView
     private var isBackToHome = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +55,25 @@ class VIewRecipesActivity : AppCompatActivity() {
         ingredientsRecipes = findViewById(R.id.view_recipes_ingredients_recipes_text)
         stepsRecipes = findViewById(R.id.view_recipes_steps_recipes_text)
         imageRecipes = findViewById(R.id.view_recipes_image_preview)
+        deleteRecipesButton = findViewById(R.id.view_delete_recipes_button)
+        editRecipesButton = findViewById(R.id.view_edit_recipes_button)
+        loadingProgressBar = findViewById(R.id.action_loading_progress_bar)
+        label = findViewById(R.id.action_add_ingredients_recipes_label)
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
 
         val recipeId = intent.getStringExtra("recipe_id")
+        val authorUid = intent.getStringExtra("author_uid")
         if (recipeId != null){
             getRecipeDetails(recipeId)
         }
 
+        val currentUserUid = auth.currentUser?.uid
+        if (currentUserUid == authorUid) {
+            editRecipesButton.visibility = View.VISIBLE
+            deleteRecipesButton.visibility = View.VISIBLE
+            }
         //action call Homepage
         homeButton.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -76,9 +99,17 @@ class VIewRecipesActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
+        deleteRecipesButton.setOnClickListener {
+            if (recipeId != null) {
+                deleteRecipe(recipeId)
+            }else{
+                Toast.makeText(this, "gagal", Toast.LENGTH_SHORT).show()
+            }
+        }
         onBackPressedDispatcher.addCallback(this) {
             handlePress()
         }
+
     }
     private fun handlePress() {
         if (isBackToHome) {
@@ -112,13 +143,30 @@ class VIewRecipesActivity : AppCompatActivity() {
                             val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                             imageRecipes.setImageBitmap(bitmap)
                         }
-                    }
                 } else {
                     Toast.makeText(this, "Recipe not found", Toast.LENGTH_SHORT).show()
                 }
             }
+
+    }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+}
+
+    private fun deleteRecipe(id: String) {
+        loadingProgressBar.visibility = View.VISIBLE
+        firestore.collection("recipes").document(id).delete()
+            .addOnSuccessListener {
+                loadingProgressBar.visibility = View.GONE
+                Toast.makeText(this, "Resep berhasil dihapus", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+            .addOnFailureListener {
+                loadingProgressBar.visibility = View.GONE
+                Toast.makeText(this, "Gagal menghapus resep: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

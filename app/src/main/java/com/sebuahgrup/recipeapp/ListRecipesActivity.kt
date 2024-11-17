@@ -52,6 +52,7 @@ class ListRecipesActivity : AppCompatActivity() {
                 // Handle item click
                 val intent = Intent(this, VIewRecipesActivity::class.java)
                 intent.putExtra("recipe_id", recipe.id)  // Pass recipe ID
+                intent.putExtra("author_uid", recipe.creatorUid)
                 startActivity(intent)
             },
             onLikeClick = { recipe ->
