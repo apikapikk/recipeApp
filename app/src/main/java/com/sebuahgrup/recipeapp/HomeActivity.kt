@@ -3,7 +3,10 @@ package com.sebuahgrup.recipeapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -36,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var recipesList: MutableList<Recipes>
     private lateinit var homeRecipesAdapter: HomeRecipesAdapter
+    private lateinit var searchRecipes : EditText
     private var isBackToHome = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
         actionButton = findViewById(R.id.profile_navigation_edit_recipes_button)
         profileButton = findViewById(R.id.profile_navigation_account_button)
         userGreetings = findViewById(R.id.home_greetings_user_label)
+        searchRecipes = findViewById(R.id.home_search_text)
         recipesList = mutableListOf()
         homeRecipesAdapter = HomeRecipesAdapter(recipesList) { recipe ->
             // Handle item click
@@ -92,6 +97,15 @@ class HomeActivity : AppCompatActivity() {
         randomizeButton.setOnClickListener {
             randomizeRecipes()
         }
+        searchRecipes.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString()
+                filterRecipes(query) // Panggil fungsi filter untuk memperbarui RecyclerView
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
         //call function to display current user name in user greetings label
         displayUser()
         getRecipesFromFirestore()
@@ -99,6 +113,17 @@ class HomeActivity : AppCompatActivity() {
             handlePress()
         }
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun filterRecipes(query: String) {
+        val filteredList = recipesList.filter { recipe ->
+            recipe.recipesName.contains(query, ignoreCase = true)
+                    || recipe.typeRecipes.contains(query, ignoreCase = true)
+                    || recipe.creatorName.contains(query, ignoreCase = true)
+        }
+        homeRecipesAdapter.updateList(filteredList) // Perbarui data di adapter
+    }
+
     private fun handlePress() {
         if (isBackToHome) {
             finishAffinity()

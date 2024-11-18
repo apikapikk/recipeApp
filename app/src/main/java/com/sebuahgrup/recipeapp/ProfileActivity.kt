@@ -3,7 +3,9 @@ package com.sebuahgrup.recipeapp
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -24,8 +26,11 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userNameProfile : EditText
     private lateinit var usernameProfile : EditText
     private lateinit var passwordProfile : EditText
+    private lateinit var actionButton: Button
     private lateinit var auth : FirebaseAuth
+    private lateinit var loadingProgressBar: FrameLayout
     private var isBackToHome = false
+    private var isEditing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +38,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
 
         //initialize button
+        loadingProgressBar = findViewById(R.id.profile_loading_progress_bar)
         homeButton = findViewById(R.id.profile_navigation_home_button)
         listButton = findViewById(R.id.profile_navigation_list_recipes_button)
         likedRecipesButton = findViewById(R.id.profile_navigation_liked_recipes_button)
@@ -42,6 +48,7 @@ class ProfileActivity : AppCompatActivity() {
         userNameProfile = findViewById(R.id.profile_name_text)
         usernameProfile = findViewById(R.id.profile_username_text)
         passwordProfile = findViewById(R.id.profile_password_text)
+        actionButton = findViewById(R.id.profile_button_action_edit)
         auth = FirebaseAuth.getInstance()
 
         //action call Homepage
@@ -68,6 +75,13 @@ class ProfileActivity : AppCompatActivity() {
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+        }
+        actionButton.setOnClickListener {
+            if (isEditing) {
+                updateUserData()
+            } else {
+                enableEditing(true)
+            }
         }
         displayUser()
         onBackPressedDispatcher.addCallback(this) {
@@ -108,6 +122,33 @@ class ProfileActivity : AppCompatActivity() {
             }
         }.addOnFailureListener {
             Toast.makeText(this, "Gagal mengambil data pengguna: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun enableEditing(enable: Boolean) {
+        isEditing = enable
+        userNameProfile.isEnabled = enable
+        usernameProfile.isEnabled = enable
+        passwordProfile.isEnabled = enable
+        actionButton.text = if (enable) "Update" else "Edit"
+    }
+    private fun updateUserData() {
+        val uid = auth.currentUser?.uid
+        if (uid != null) {
+            val db = FirebaseDatabase.getInstance().getReference("users").child(uid)
+            val updatedUser = mapOf(
+                "name" to userNameProfile.text.toString(),
+                "email" to usernameProfile.text.toString(),
+                "password" to passwordProfile.text.toString()
+            )
+
+            db.updateChildren(updatedUser).addOnSuccessListener {
+                Toast.makeText(this, "Data berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                enableEditing(false) // Kembali ke mode non-editable
+            }.addOnFailureListener {
+                Toast.makeText(this, "Gagal memperbarui data: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "User belum login.", Toast.LENGTH_SHORT).show()
         }
     }
 }

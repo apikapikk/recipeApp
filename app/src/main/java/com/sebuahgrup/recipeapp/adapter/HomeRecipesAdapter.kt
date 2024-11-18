@@ -1,5 +1,6 @@
 package com.sebuahgrup.recipeapp.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,10 @@ import com.sebuahgrup.recipeapp.R
 import android.graphics.Bitmap
 import android.util.Base64
 import android.graphics.BitmapFactory
-import android.widget.Toast
 import com.sebuahgrup.recipeapp.model.Recipes
 
 class HomeRecipesAdapter(
-    private val recipesList: List<Recipes>,
+    private var recipesList: List<Recipes>,
     private val onItemClick: (Recipes) -> Unit
     ) : RecyclerView.Adapter<HomeRecipesAdapter.RecipeViewHolder>() {
 
@@ -38,6 +38,12 @@ class HomeRecipesAdapter(
             println("log clicked")
             onItemClick(recipe)  // Pass the clicked recipe to the listener
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(newList: List<Recipes>) {
+        this.recipesList = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
