@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.addCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sebuahgrup.recipeapp.model.Recipes
@@ -42,6 +44,17 @@ class VIewRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_view_recipes)
+        val yourConstraintLayout: View = findViewById(R.id.main_view_page)
+        ViewCompat.setOnApplyWindowInsetsListener(yourConstraintLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            insets
+        }
 
         //initialize button
         homeButton = findViewById(R.id.view_navigation_home_button)

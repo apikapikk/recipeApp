@@ -3,8 +3,10 @@ package com.sebuahgrup.recipeapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var emailText : EditText
     private lateinit var passwordText : EditText
     private lateinit var nameText : EditText
+    private lateinit var loadingProgress : FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,7 @@ class RegisterActivity : AppCompatActivity() {
         emailText = findViewById(R.id.register_email_text)
         passwordText = findViewById(R.id.register_password_text)
         nameText = findViewById(R.id.register_name_text)
+        loadingProgress = findViewById(R.id.register_loading_progress_bar)
 
         //action button register
         buttonRegister.setOnClickListener {
@@ -87,15 +91,18 @@ class RegisterActivity : AppCompatActivity() {
     }
     // register user function
     private fun registerFirebase(email: String, password: String, name: String) {
+        loadingProgress.visibility = View.VISIBLE
         auth.createUserWithEmailAndPassword(email,password)
             .addOnCompleteListener(this){
                 if (it.isSuccessful){
                     val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
                     saveNewUserToDatabase(uid ,email, password, name)
+                    loadingProgress.visibility = View.GONE
                     Toast.makeText(this,"register successful",Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }else{
+                    loadingProgress.visibility = View.GONE
                     Toast.makeText(this,"register failed",Toast.LENGTH_SHORT).show()
                 }
             }

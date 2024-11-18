@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/main_liked_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LikedRecipesActivity">
@@ -16,7 +16,7 @@
         android:layout_marginLeft="80dp"
         android:layout_marginTop="40dp"
         android:text="Happy Cooking"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:fontFamily="@font/jakartasanssemibold"
         android:textColor="@color/text_disable_secondary"
         tools:ignore="MissingConstraints" />
@@ -38,7 +38,7 @@
         android:textColor="@color/text_disable"
         android:text="Elisia Safina"
         android:fontFamily="@font/jakartasansbold"
-        android:textSize="42sp"
+        android:textSize="32sp"
         app:layout_constraintTop_toBottomOf="@id/liked_recipes_greetings_label"
         app:layout_constraintLeft_toLeftOf="@id/liked_recipes_greetings_icon"/>
 
@@ -49,8 +49,8 @@
         android:textColor="@color/text_disable"
         android:text="Like It Recipes"
         android:fontFamily="@font/jakartasanssemibold"
-        android:textSize="18sp"
-        android:layout_marginTop="62dp"
+        android:textSize="16sp"
+        android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/liked_recipes_greetings_user_label"
         app:layout_constraintLeft_toLeftOf="@id/liked_recipes_greetings_icon"/>
 
@@ -67,7 +67,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/liked_recycle_view_recipes"
         android:layout_width="match_parent"
-        android:layout_height="560dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/liked_recipes_like_it_label"
         app:layout_constraintBottom_toTopOf="@id/liked_recipes_frame_navigation"
         android:orientation="horizontal"
@@ -80,8 +81,10 @@
         android:layout_height="80dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
-        android:layout_marginLeft="5dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <ImageButton
             android:id="@+id/liked_navigation_home_button"
@@ -125,6 +128,41 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/liked_loading_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#80000000"/>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ProgressBar
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_style_rounded"
+                android:backgroundTint="@android:color/white"
+                android:indeterminate="true"
+                tools:ignore="MissingConstraints"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proses Upload"
+                android:fontFamily="@font/jakartasansmedium"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

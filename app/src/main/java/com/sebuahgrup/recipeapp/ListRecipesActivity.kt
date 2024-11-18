@@ -3,7 +3,9 @@ package com.sebuahgrup.recipeapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -31,6 +33,7 @@ class ListRecipesActivity : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var recipesList: MutableList<Recipes>
     private lateinit var listRecipesAdapter: ListRecipesAdapter
+
     private var isBackToHome = false
 
 
@@ -38,6 +41,17 @@ class ListRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_list_recipes)
+        val yourConstraintLayout: View = findViewById(R.id.main_list_page)
+        ViewCompat.setOnApplyWindowInsetsListener(yourConstraintLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            insets
+        }
 
         //initialize button
         homeButton = findViewById(R.id.list_navigation_home_button)
@@ -66,6 +80,7 @@ class ListRecipesActivity : AppCompatActivity() {
                     if (recipe.likedBy.contains(currentUserUid)) {
                         // Remove UID from likedBy
                         recipeRef.update("likedBy", FieldValue.arrayRemove(currentUserUid))
+
                     } else {
                         // Add UID to likedBy
                         recipeRef.update("likedBy", FieldValue.arrayUnion(currentUserUid))

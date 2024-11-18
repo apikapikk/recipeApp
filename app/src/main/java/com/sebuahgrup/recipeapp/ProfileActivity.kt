@@ -3,6 +3,7 @@ package com.sebuahgrup.recipeapp
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -12,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.sebuahgrup.recipeapp.model.User
@@ -29,6 +32,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var actionButton: Button
     private lateinit var auth : FirebaseAuth
     private lateinit var loadingProgressBar: FrameLayout
+    private lateinit var logoutButton: Button
     private var isBackToHome = false
     private var isEditing = false
 
@@ -36,7 +40,17 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_profile)
-
+        val yourConstraintLayout: View = findViewById(R.id.main_profile_page)
+        ViewCompat.setOnApplyWindowInsetsListener(yourConstraintLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            insets
+        }
         //initialize button
         loadingProgressBar = findViewById(R.id.profile_loading_progress_bar)
         homeButton = findViewById(R.id.profile_navigation_home_button)
@@ -49,6 +63,7 @@ class ProfileActivity : AppCompatActivity() {
         usernameProfile = findViewById(R.id.profile_username_text)
         passwordProfile = findViewById(R.id.profile_password_text)
         actionButton = findViewById(R.id.profile_button_action_edit)
+        logoutButton = findViewById(R.id.profile_button_action_logout)
         auth = FirebaseAuth.getInstance()
 
         //action call Homepage
@@ -82,6 +97,13 @@ class ProfileActivity : AppCompatActivity() {
             } else {
                 enableEditing(true)
             }
+        }
+        logoutButton.setOnClickListener {
+            auth.signOut() // Logout dari Firebase
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
         displayUser()
         onBackPressedDispatcher.addCallback(this) {
@@ -133,22 +155,39 @@ class ProfileActivity : AppCompatActivity() {
     }
     private fun updateUserData() {
         val uid = auth.currentUser?.uid
-        if (uid != null) {
-            val db = FirebaseDatabase.getInstance().getReference("users").child(uid)
-            val updatedUser = mapOf(
-                "name" to userNameProfile.text.toString(),
-                "email" to usernameProfile.text.toString(),
-                "password" to passwordProfile.text.toString()
-            )
+        val newPassword = passwordProfile.text.toString()
+        val newEmail = usernameProfile.text.toString()
+        val newName = userNameProfile.text.toString()
 
-            db.updateChildren(updatedUser).addOnSuccessListener {
-                Toast.makeText(this, "Data berhasil diperbarui", Toast.LENGTH_SHORT).show()
-                enableEditing(false) // Kembali ke mode non-editable
-            }.addOnFailureListener {
-                Toast.makeText(this, "Gagal memperbarui data: ${it.message}", Toast.LENGTH_SHORT).show()
+        if (uid != null) {
+            val user = auth.currentUser
+            user?.updateEmail(newEmail)?.addOnSuccessListener {
+                user.updatePassword(newPassword).addOnSuccessListener {
+                    val db = FirebaseDatabase.getInstance().getReference("users").child(uid)
+                    val updatedUser = mapOf(
+                        "name" to newName,
+                        "email" to newEmail,
+                        "password" to newPassword
+                    )
+
+                    db.updateChildren(updatedUser).addOnSuccessListener {
+                        Toast.makeText(this, "Data berhasil diperbarui", Toast.LENGTH_SHORT).show()
+                        enableEditing(false) // Kembali ke mode non-editable
+                    }.addOnFailureListener {
+                        showError("Gagal memperbarui data: ${it.message}")
+                    }
+                }.addOnFailureListener {
+                    showError("Gagal memperbarui password: ${it.message}")
+                }
+            }?.addOnFailureListener {
+                showError("Gagal memperbarui email: ${it.message}")
             }
         } else {
-            Toast.makeText(this, "User belum login.", Toast.LENGTH_SHORT).show()
+            showError("User belum login.")
         }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
