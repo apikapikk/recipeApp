@@ -23,6 +23,8 @@ import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -60,6 +62,17 @@ class ActionRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_action_recipes)
+        val yourConstraintLayout: View = findViewById(R.id.main_action_page)
+        ViewCompat.setOnApplyWindowInsetsListener(yourConstraintLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            insets
+        }
         //initialize button
         loadingProgressBar = findViewById(R.id.action_loading_progress_bar)
         homeButton = findViewById(R.id.action_navigation_home_button)
@@ -283,6 +296,15 @@ class ActionRecipesActivity : AppCompatActivity() {
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
     private fun addRecipesToDatabase() {
+        val recipeName = nameRecipesText.text.toString()
+        val ingredients = ingredientsRecipesText.text.toString()
+        val steps = stepRecipesText.text.toString()
+        val image = imageBase64
+
+        if (recipeName.isNullOrEmpty() || ingredients.isNullOrEmpty() || steps.isNullOrEmpty() || image.isNullOrEmpty()) {
+            Toast.makeText(this, "Semua kolom harus diisi dan gambar harus ada!", Toast.LENGTH_SHORT).show()
+            return
+        }
         loadingProgressBar.visibility = View.VISIBLE
         val db = Firebase.firestore
         val newRecipe = Recipes(

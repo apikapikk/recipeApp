@@ -3,12 +3,16 @@ package com.sebuahgrup.recipeapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +41,17 @@ class LikedRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_liked_recipes)
+        val yourConstraintLayout: View = findViewById(R.id.main_liked_page)
+        ViewCompat.setOnApplyWindowInsetsListener(yourConstraintLayout) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                systemBarsInsets.bottom
+            )
+            insets
+        }
 
         //initialize button
         homeButton = findViewById(R.id.liked_navigation_home_button)
@@ -158,7 +173,6 @@ class LikedRecipesActivity : AppCompatActivity() {
             Toast.makeText(this, "User belum login", Toast.LENGTH_SHORT).show()
             return
         }
-
         db.collection("recipes")
             .whereArrayContains("likedBy", currentUserUid)
             .get()
