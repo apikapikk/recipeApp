@@ -12,9 +12,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.sebuahgrup.recipeapp.adapter.HomeRecipesAdapter
 import com.sebuahgrup.recipeapp.model.Recipes
 import com.sebuahgrup.recipeapp.model.User
@@ -30,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var profileButton : ImageButton
     private lateinit var userGreetings : TextView
     private lateinit var recyclerView: RecyclerView
+    private lateinit var randomizeButton : Button
     private lateinit var auth : FirebaseAuth
     private lateinit var recipesList: MutableList<Recipes>
     private lateinit var homeRecipesAdapter: HomeRecipesAdapter
@@ -59,6 +62,7 @@ class HomeActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         auth = FirebaseAuth.getInstance()
         recyclerView.adapter = homeRecipesAdapter
+        randomizeButton = findViewById(R.id.home_randomize_recipes_button)
 
         //action call page
         homeButton.setOnClickListener {
@@ -84,6 +88,9 @@ class HomeActivity : AppCompatActivity() {
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+        }
+        randomizeButton.setOnClickListener {
+            randomizeRecipes()
         }
         //call function to display current user name in user greetings label
         displayUser()
@@ -118,6 +125,32 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting documents: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun randomizeRecipes() {
+        val db = Firebase.firestore
+        db.collection("recipes").get()
+            .addOnSuccessListener { recipeSnapshot ->
+                if (!recipeSnapshot.isEmpty) {
+                    val recipeIds = recipeSnapshot.documents.map { it.id }
+                    val randomId = recipeIds.random()
+                    db.collection("recipes").document(randomId).get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                val randomRecipe = document.toObject(Recipes::class.java)
+                                if (randomRecipe != null) {
+                                    val intent = Intent(this, VIewRecipesActivity::class.java)
+                                    intent.putExtra("recipe_id", randomId)
+                                    intent.putExtra("author_uid", randomRecipe.creatorUid)
+                                    startActivity(intent)
+                                }
+                            }
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Gagal mengambil data resep: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
