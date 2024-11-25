@@ -104,7 +104,7 @@ class ActionRecipesActivity : AppCompatActivity() {
         if (isUpdateMode) {
             setupUpdateMode()
         } else {
-            addRecipesButton.text = "Add Recipes"
+            addRecipesButton.text = "Add"
         }
         //action call Homepage
         homeButton.setOnClickListener {

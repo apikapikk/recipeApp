@@ -69,6 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@id/liked_recipes_like_it_label"
         app:layout_constraintBottom_toTopOf="@id/liked_recipes_frame_navigation"
         android:orientation="horizontal"
@@ -80,7 +81,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        tools:ignore="MissingConstraints"
         android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -88,24 +88,27 @@
 
         <ImageButton
             android:id="@+id/liked_navigation_home_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_home_icon"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/liked_navigation_list_recipes_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_list_icon"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/liked_navigation_liked_recipes_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_favorite_icon"
             app:tint="@color/primary"
@@ -113,16 +116,18 @@
 
         <ImageButton
             android:id="@+id/liked_navigation_edit_recipes_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_edit_recipes_icon"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/liked_navigation_account_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/button_style_whithout_backgorund"
             android:src="@drawable/navigation_account_icon"
             tools:ignore="SpeakableTextPresentCheck" />
